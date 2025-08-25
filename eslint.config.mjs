@@ -10,7 +10,10 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Next.js presets
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Your global ignores
   {
     ignores: [
       "node_modules/**",
@@ -19,6 +22,22 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+  },
+
+  // ↓ Override rules just for config files
+  {
+    files: [
+      "tailwind.config.{js,cjs,mjs,ts}",
+      "postcss.config.{js,cjs,mjs,ts}",
+      "eslint.config.{js,cjs,mjs,ts}",
+      "next.config.{js,cjs,mjs,ts}",
+    ],
+    rules: {
+      // Turn off the TS rule that forbids require()
+      "@typescript-eslint/no-require-imports": "off",
+      // (Optional) If you hit this too:
+      "@typescript-eslint/no-var-requires": "off",
+    },
   },
 ];
 
