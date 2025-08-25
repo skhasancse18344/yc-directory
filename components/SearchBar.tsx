@@ -35,7 +35,7 @@ export default function SearchBar() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search Startups"
-          className="flex-1 bg-transparent text-base outline-none placeholder:text-gray-500"
+          className="flex-1 bg-transparent text-black outline-none placeholder:text-gray-500"
         />
         <button
           type="submit"
