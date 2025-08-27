@@ -1,18 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SearchBar() {
-  const [q, setQ] = useState("");
+export default function SearchBar({ query = "" }: { query?: string }) {
+  const [q, setQ] = useState(query);
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+
+  // keep local state in sync when user navigates back/forward
+  useEffect(() => {
+    const current = params.get("query") ?? "";
+    if (current !== q) setQ(current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const sp = new URLSearchParams(Array.from(params.entries()));
+    if (q) sp.set("query", q);
+    else sp.delete("query");
+    router.push(`${pathname}?${sp.toString()}`, { scroll: false });
+  }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        // TODO: hook to your search action
-      }}
-      className="mx-auto max-w-3xl"
-    >
+    <form onSubmit={onSubmit} className="mx-auto max-w-3xl">
       <label className="sr-only" htmlFor="search">
         Search Startups
       </label>
